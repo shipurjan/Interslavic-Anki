@@ -2,8 +2,11 @@ import json
 from re import L
 
 def main():
-    DICTIONARY_PATH = "json/basic.json"
-    with open(DICTIONARY_PATH, "r", encoding="utf-8") as d_json:
+    DICTIONARY_PATH = 'json/interslavic_dict.json'
+    FREQ_RUSSIAN_PATH = 'json/freq_list_russian.json'
+    FREQ_POLISH_PATH = 'json/freq_list_polish.json'
+    
+    with open(DICTIONARY_PATH, 'r', encoding='utf-8') as d_json:
         dictionary = json.load(d_json)['wordList']
 
     class Word:
@@ -29,22 +32,8 @@ def main():
         def __repr__(self):
             return(str(self.__value))
 
-    parts_of_speech = [
-        'n.', 'v.tr. pf.', 'f.', 'pron.indef.', 'adj.', 
-        'v.tr. ipf.', 'adv.', 'n.sg.', 'v.intr. ipf.', 
-        'f.sg.', 'm.', 'm.anim.', 'v.tr. ipf./pf.', 'num.ord.', 
-        'f.pl.', 'pron.pers.', 'm.sg.', 'v.refl. pf.', 
-        'num.card.', 'v.intr. pf.', 'conj.', 'pron.int.', 
-        'pron.poss.', 'prep.', 'pron.refl.', 'm./f.', 'v.aux. ipf.', 
-        'v.refl. ipf.', 'num.coll.', 'pron.rec.', 'v.ipf.', 'phrase', 
-        'm.pl.', 'prefix', 'pron.dem.', 'v.pf.', 'n.pl.', 'n.indecl.', 
-        'particle', 'intj.', 'pron.rel.', 'v.aux. pf.', 'num.fract.', 
-        'num.subst.', 'num.', 'suffix', 'v.intr. ipf./pf.', 'm.indecl.', 
-        'num.mult.', 'num.diff.', 'v.tr.ipf', 
-        'v.refl. ipf./pf.', 'f.indecl.', 'adj']
-
-    for _ in range(1,20):
-        
+        #todo find verbs that are the same but begin with po, ot, etc.
+    for _ in range(1,500):
         w = Word(_)
         print(
             w.id,
@@ -53,9 +42,8 @@ def main():
             w.english,
             w.russian,
             w.polish,
-        sep="\t")
+        sep='\t')
         
-    
-    print(parts_of_speech)
+
 if __name__ == '__main__':
     main()
