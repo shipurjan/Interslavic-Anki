@@ -4,6 +4,32 @@ import random
 import string
 pp = pprint.PrettyPrinter()
 
+def a(test_str):
+    ret = ''
+    skip1c = 0
+    skip2c = 0
+    for i in test_str:
+        if i == '[':
+            skip1c += 1
+        elif i == '(':
+            skip2c += 1
+        elif i == ']' and skip1c > 0:
+            skip1c -= 1
+        elif i == ')'and skip2c > 0:
+            skip2c -= 1
+        elif skip1c == 0 and skip2c == 0:
+            ret += i
+    return ret
+
+def sanitize_list(l):
+  l2 = []
+  for s in l:
+    c = a(s)
+    c = c.replace("!","")
+    c = c.strip()
+    l2.append(c)
+  return l2
+
 def compare_lists(l1, l2):
     a_set = set(l1)
     b_set = set(l2)
@@ -17,9 +43,14 @@ def logPercent(ratio):
         stratio = str(int(ratio*100))
         print(stratio+"%...")
 
-def readFreq(freq_path):
+def saveJSON(dictionary, dict_path):
+    with open(dict_path, 'w', encoding='utf-8') as outfile:
+        json.dump(dictionary, outfile, ensure_ascii=False)
+
+def readJSON(freq_path):
     with open(freq_path, 'r', encoding='utf-8') as f_json:
         freq = json.load(f_json)
+    print("read",freq_path,"...")
     return freq
 
 def appendConjugations(dict, search_source):
@@ -32,15 +63,22 @@ def appendConjugations(dict, search_source):
                 'conjugations': conjugations
             })
 
-def generateDict(word_list, group_index, headers, search_source):
-    dict = {}
+def generateDict(word_list, search_source):
+    def idx(s):
+        return headers.index(s)
+    headers = word_list.pop(0)
+    language_indexes = ['en', 'ru', 'be', 'uk', 'pl', 'cs', 'sk', 'bg', 'mk', 'sr', 'hr', 'sl']
+
     print("generating a dict from json file...")
+    dict = {}
     for i,line in enumerate(word_list):
-        word_isv = line[group_index]
+        word_isv = line[idx('isv')]
         logPercent(i/len(word_list))
         subdict = {}
         for (i, key) in enumerate(headers):
-            if i != group_index:
+            if key in language_indexes:
+                line[i] = line[i].split(", ")
+            if key != 'isv':
                 subdict.update({key: line[i]})
         appendConjugations(subdict, search_source)
         dict[word_isv] = ( [subdict] + dict[word_isv] 
@@ -48,24 +86,17 @@ def generateDict(word_list, group_index, headers, search_source):
             else [subdict] )
     return dict
 
-def readDict(dict_path):
-    with open(dict_path, 'r', encoding='utf-8') as d_json:
-        dict = json.load(d_json)
-
+def makeDict(dict_path):
+    dict = readJSON(dict_path)
     if (list(dict.keys()) != ['wordList', 'searchIndex']):
+        print(dict_path,"is in wrong format.")
         return
 
-    print(dict_path,"loaded.")
     word_list = dict['wordList']
     search_index = dict['searchIndex']
-
-    word_group_index = 'isv'
     search_source = search_index["isv-src"]
 
-    word_list_header = word_list.pop(0)
-    isv_index = word_list_header.index(word_group_index)
-
-    refactored_dict = generateDict(word_list, isv_index, word_list_header, search_source)
+    refactored_dict = generateDict(word_list, search_source)
     return refactored_dict
     
 def addFreqValuesToDict(dict, *freqs):
@@ -78,26 +109,31 @@ def addFreqValuesToDict(dict, *freqs):
             logPercent(i/len(dict))
             for dict_definition in dict_definitions:
                 for freq_position, entries in freq_dict.items():
-                    if(compare_lists(entries, dict_definition['conjugations'])):
+                    print(entries, dict_definition[language_tag])
+                    if(compare_lists(entries, dict_definition[language_tag])):
                         dict_definition[freq_key] = freq_position
 
-def saveDict(dictionary, dict_path):
-    with open(dict_path, 'w') as outfile:
-        json.dump(dictionary, outfile)
-
 def main():
-    ISV_DICTIONARY_PATH = 'json/fake_dict.json'
+    ISV_DICTIONARY_PATH = 'json/interslavic_dict.json'
     FREQ_RUSSIAN_PATH = 'json/freq_list_russian.json'
     FREQ_POLISH_PATH = 'json/freq_list_polish.json'
 
     OUTPUT_PATH = 'json/frequency_dict.json'
+    BUILT_DICTIONARY_PATH = 'json/built_dict.json'
+    MAKE = False
 
-    isv_dict = readDict(ISV_DICTIONARY_PATH)
-    freq_ru = readFreq(FREQ_RUSSIAN_PATH)
-    freq_pl = readFreq(FREQ_POLISH_PATH)
+    isv_dict = makeDict(ISV_DICTIONARY_PATH) if MAKE else readJSON(BUILT_DICTIONARY_PATH)
+    if isv_dict is None:
+        print("Error")
+        return
+    if MAKE:
+        saveJSON(isv_dict, BUILT_DICTIONARY_PATH)
 
-    addFreqValuesToDict(isv_dict, freq_pl, freq_ru)
-    saveDict(isv_dict, OUTPUT_PATH)
+    freq_ru = readJSON(FREQ_RUSSIAN_PATH)
+    freq_pl = readJSON(FREQ_POLISH_PATH)
+
+    addFreqValuesToDict(isv_dict, freq_ru, freq_pl)
+    saveJSON(isv_dict, OUTPUT_PATH)
 
 if __name__ == '__main__':
     main()
