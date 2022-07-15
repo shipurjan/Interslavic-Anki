@@ -153,45 +153,63 @@ def normalize_freq(dict):
         for word, body in dict.items():
             freq = int(body['avg_freq'])
             if(freq == current_freq):
-                body['freq'] = left_to_normalize
+                body['freq'] = str(left_to_normalize)
                 left_to_normalize -= 1
         current_freq -= 1
+
+def sort_by_freq_and_split(dict):
+    sorted_dict = [[*row] for row in sorted(
+        dict.items(), key=lambda x:int(x[1]['freq'])
+    )]
+    freq_count = 0
+    for entry in sorted_dict:
+        if entry[1]['freq'] != "0":
+            freq_count += 1
+    
+    dictionary = {
+        'frequency_order': sorted_dict[-freq_count:],
+        'random_order': sorted_dict[:-freq_count]
+    }
+    return dictionary
+    
 
 def main():
     # MAKE = False
 
     # # step 0
-    # isv_dict = make_dict('json/interslavic_dict.json') if MAKE else read_json('json/build/0formatted_dict.json')
+    # isv_dict = make_dict('json/interslavic_dict.json') if MAKE else read_json('json/build/0.json')
     # if isv_dict is None:
     #     print("Error")
     #     return
     # if MAKE:
-    #     save_json(isv_dict, 'json/build/0formatted_dict.json')
+    #     save_json(isv_dict, 'json/build/0.json')
     
     # freq_ru = read_json('json/freq_list_russian.json')
     # freq_pl = read_json('json/freq_list_polish.json')
 
     # # step 1
     # add_freq_values_to_dict(isv_dict, freq_pl, freq_ru)
+    # save_json(isv_dict, 'json/build/1.json')
 
-    # save_json(isv_dict, 'json/build/1_freq_values_dict.json')
-    
-    # path = 'json/build/1_freq_values_dict.json'
-    # save_json(isv_dict, path)
-    # isv_dict = read_json(path)
-
-    # step 2
+    # #step 2
     # add_avg_freq_to_dict(isv_dict)
-    path = 'json/build/2_avg_freq_dict.json'
-    # save_json(isv_dict, path)
-    isv_dict = read_json(path)
+    # save_json(isv_dict, 'json/build/2.json')
 
-    # step 3
-    normalize_freq(isv_dict)
-    save_json(isv_dict, 'json/build/3_normalized_dict.json')
+    # # step 3
+    # isv_dict = read_json('json/build/2.json')
+    # normalize_freq(isv_dict)
+    # save_json(isv_dict, 'json/build/3.json')
 
-    # final dictionary
-    #save_json(isv_dict, 'json/build/final_frequency_dict.json')
+    # step 4
+    isv_dict = read_json('json/build/final_frequency_dict.json')
+    isv_dict = sort_by_freq_and_split(isv_dict)
+    save_json(isv_dict, 'json/build/4.json')
+
+    # # final dictionary
+    
+    save_json(isv_dict, 'json/build/final_frequency_dict.json')
+
+
 
 if __name__ == '__main__':
     main()

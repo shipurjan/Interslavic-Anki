@@ -4,6 +4,7 @@ import json
 def save_json(dictionary, dict_path):
     with open(dict_path, 'w', encoding='utf-8') as outfile:
         json.dump(dictionary, outfile, ensure_ascii=False)
+    print("saved", dict_path, "...")
 
 def read_json(freq_path):
     with open(freq_path, 'r', encoding='utf-8') as f_json:
