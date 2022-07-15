@@ -27,6 +27,7 @@ def sanitize_list(l):
     c = remove_parentheses(s)
     c = c.replace("!","")
     c = c.strip()
+    c = c.lower()
     l2.append(c)
   return l2
 
@@ -174,39 +175,37 @@ def sort_by_freq_and_split(dict):
     
 
 def main():
-    # MAKE = False
+    MAKE = True
 
-    # # step 0
-    # isv_dict = make_dict('json/interslavic_dict.json') if MAKE else read_json('json/build/0.json')
-    # if isv_dict is None:
-    #     print("Error")
-    #     return
-    # if MAKE:
-    #     save_json(isv_dict, 'json/build/0.json')
+    # step 0
+    isv_dict = make_dict('json/interslavic_dict.json') if MAKE else read_json('json/build/0.json')
+    if isv_dict is None:
+        print("Error")
+        return
+    if MAKE:
+        save_json(isv_dict, 'json/build/0.json')
     
-    # freq_ru = read_json('json/freq_list_russian.json')
-    # freq_pl = read_json('json/freq_list_polish.json')
+    freq_ru = read_json('json/freq_list_russian.json')
+    freq_pl = read_json('json/freq_list_polish.json')
 
-    # # step 1
-    # add_freq_values_to_dict(isv_dict, freq_pl, freq_ru)
-    # save_json(isv_dict, 'json/build/1.json')
+    # step 1
+    add_freq_values_to_dict(isv_dict, freq_pl, freq_ru)
+    save_json(isv_dict, 'json/build/1.json')
 
-    # #step 2
-    # add_avg_freq_to_dict(isv_dict)
-    # save_json(isv_dict, 'json/build/2.json')
+    #step 2
+    add_avg_freq_to_dict(isv_dict)
+    save_json(isv_dict, 'json/build/2.json')
 
-    # # step 3
-    # isv_dict = read_json('json/build/2.json')
-    # normalize_freq(isv_dict)
-    # save_json(isv_dict, 'json/build/3.json')
+    # step 3
+    isv_dict = read_json('json/build/2.json')
+    normalize_freq(isv_dict)
+    save_json(isv_dict, 'json/build/3.json')
 
     # step 4
-    isv_dict = read_json('json/build/final_frequency_dict.json')
     isv_dict = sort_by_freq_and_split(isv_dict)
     save_json(isv_dict, 'json/build/4.json')
 
-    # # final dictionary
-    
+    #  final dictionary
     save_json(isv_dict, 'json/build/final_frequency_dict.json')
 
 
