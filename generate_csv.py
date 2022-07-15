@@ -1,8 +1,6 @@
 import json
 import re
 import csv
-from typing import final
-
 
 class Word:
     def __init__(self, list, n):
@@ -45,7 +43,7 @@ def remove_duplicates(freq_list):
         for idx in dups:
             l1 = freq_list[min_freq]
             l2 = freq_list[idx]
-            for i in range(4,len(l1)):
+            for i in range(5,len(l1)):
                 v1 = [x.strip() for x in l1[i].split(",")]
                 v2 = [x.strip() for x in l2[i].split(",")]
                 l1[i] = ", ".join(list(set(v1+v2)))
@@ -72,7 +70,7 @@ def getAlternatingFreqList(list1, list2):
 
 def getFinalFreqList(freq_word_list, dictionary):
     final_freq_list = []
-    for freq_word in freq_word_list:
+    for freq_word in freq_word_list[:10]:
         print(freq_word)
         for _ in range(1,len(dictionary)):
             w = Word(dictionary,_)
@@ -101,10 +99,7 @@ def main():
 
     freq_word_list = getAlternatingFreqList(freq_pl, freq_ru)
     final_interslavic_list = getFinalFreqList(freq_word_list, dictionary)
-    print(len(final_interslavic_list))
-    remove_duplicates(final_interslavic_list)
 
-    
     with open("freq_interslavic.csv", "w") as f:
         pass
 
