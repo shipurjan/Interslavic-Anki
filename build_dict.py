@@ -188,13 +188,13 @@ def main():
     
     freq_cs = read_json('json/scraped/cs.json')
     freq_bg = read_json('json/scraped/bg.json')
-    freq_sr = read_json('json/scraped/sr.json')
+    freq_hr = read_json('json/scraped/hr.json')
     freq_ru = read_json('json/scraped/ru.json')
     freq_pl = read_json('json/scraped/pl.json')
 
 
     # step 1
-    add_freq_values_to_dict(isv_dict, freq_cs, freq_bg, freq_sr, freq_pl, freq_ru)
+    add_freq_values_to_dict(isv_dict, freq_cs, freq_bg, freq_hr, freq_pl, freq_ru)
     save_json(isv_dict, 'json/build/1.json')
 
     # TODO: prioritize words with that are in all freq_lists in step 2
