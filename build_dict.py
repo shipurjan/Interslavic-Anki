@@ -131,33 +131,67 @@ def add_avg_freq_to_dict(dict):
         cumulative_freq = 0
         for dict_definition in dict_definitions:
             cumulative_freq += int(dict_definition["freq"])
-        avg_freq = int(cumulative_freq/len(dict_definitions))
+        avg_freq = str(int(cumulative_freq/len(dict_definitions)))
         dict[word] = {"avg_freq": avg_freq, "definitions": dict_definitions}
 
+def normalize_freq(dict):
+    positive_freq_count = 0
+    max_freq = 0
+    for word, body in dict.items():
+        freq = int(body['avg_freq'])
+        if(freq != 0):
+            positive_freq_count += 1
+            if(freq > max_freq):
+                max_freq = freq
+        else:
+            body['freq'] = "0"
+
+    current_freq = max_freq
+    left_to_normalize = positive_freq_count
+    while(left_to_normalize > 0):
+        log_percent(1 - (current_freq/max_freq))
+        for word, body in dict.items():
+            freq = int(body['avg_freq'])
+            if(freq == current_freq):
+                body['freq'] = left_to_normalize
+                left_to_normalize -= 1
+        current_freq -= 1
+
 def main():
-    ORIGINAL_ISV_PATH = 'json/interslavic_dict.json'
-    FORMATTED_DICTIONARY_PATH = 'json/0formatted_dict.json'
+    # MAKE = False
 
-    MAKE = False
+    # # step 0
+    # isv_dict = make_dict('json/interslavic_dict.json') if MAKE else read_json('json/build/0formatted_dict.json')
+    # if isv_dict is None:
+    #     print("Error")
+    #     return
+    # if MAKE:
+    #     save_json(isv_dict, 'json/build/0formatted_dict.json')
+    
+    # freq_ru = read_json('json/freq_list_russian.json')
+    # freq_pl = read_json('json/freq_list_polish.json')
 
-    isv_dict = make_dict(ORIGINAL_ISV_PATH) if MAKE else read_json(FORMATTED_DICTIONARY_PATH)
-    if isv_dict is None:
-        print("Error")
-        return
-    if MAKE:
-        save_json(isv_dict, FORMATTED_DICTIONARY_PATH)
+    # # step 1
+    # add_freq_values_to_dict(isv_dict, freq_pl, freq_ru)
 
-    freq_ru = read_json('json/freq_list_russian.json')
-    freq_pl = read_json('json/freq_list_polish.json')
+    # save_json(isv_dict, 'json/build/1_freq_values_dict.json')
+    
+    # path = 'json/build/1_freq_values_dict.json'
+    # save_json(isv_dict, path)
+    # isv_dict = read_json(path)
 
-    add_freq_values_to_dict(isv_dict, freq_pl, freq_ru)
-    save_json(isv_dict, 'json/1_freq_values_dict.json')
+    # step 2
+    # add_avg_freq_to_dict(isv_dict)
+    path = 'json/build/2_avg_freq_dict.json'
+    # save_json(isv_dict, path)
+    isv_dict = read_json(path)
 
-    add_avg_freq_to_dict(isv_dict)
-    save_json(isv_dict, 'json/2_avg_freq_dict.json')
+    # step 3
+    normalize_freq(isv_dict)
+    save_json(isv_dict, 'json/build/3_normalized_dict.json')
 
     # final dictionary
-    save_json(isv_dict, 'json/final_frequency_dict.json')
+    #save_json(isv_dict, 'json/build/final_frequency_dict.json')
 
 if __name__ == '__main__':
     main()
