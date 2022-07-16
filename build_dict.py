@@ -151,7 +151,7 @@ def normalize_freq(dict):
                 max_freq = freq
         else:
             body['freq'] = "0"
-
+    print("normalizing...")
     current_freq = max_freq
     left_to_normalize = positive_freq_count
     while(left_to_normalize > 0):
@@ -219,6 +219,7 @@ def main():
 
     # #  final dictionary
     # save_json(isv_dict, 'json/build/final_frequency_dict.json')
+    pass
 
 
 
