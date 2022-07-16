@@ -132,6 +132,8 @@ def convert_to_flat_list(lang, original_list):
     for entry in original_list:
         row = []
         word = entry[0]
+        if(word.endswith(')')):
+            continue
         description = entry[1]
         definitions = description['definitions']
         sorted_definitions = sorted(definitions, key=lambda d: d['freq_count'], reverse=True) 
@@ -152,25 +154,26 @@ def create_html_page(flat_list):
 
 def main():
     dicts = [
-        # ["isv", read_json('json/build/final_frequency_dict.json')],
-        # ["be", read_json('json/build/final_frequency_dict_be.json')],
-        # ["bg", read_json('json/build/final_frequency_dict_bg.json')],
-        # ["cs", read_json('json/build/final_frequency_dict_cs.json')],
-        # ["en", read_json('json/build/final_frequency_dict_en.json')],
-        # ["hr", read_json('json/build/final_frequency_dict_hr.json')],
-        # ["mk", read_json('json/build/final_frequency_dict_mk.json')],
+        ["isv", read_json('json/build/final_frequency_dict.json')],
+        ["be", read_json('json/build/final_frequency_dict_be.json')],
+        ["bg", read_json('json/build/final_frequency_dict_bg.json')],
+        ["cs", read_json('json/build/final_frequency_dict_cs.json')],
+        ["en", read_json('json/build/final_frequency_dict_en.json')],
+        ["hr", read_json('json/build/final_frequency_dict_hr.json')],
+        ["mk", read_json('json/build/final_frequency_dict_mk.json')],
         ["pl", read_json('json/build/final_frequency_dict_pl.json')],
-        # ["ru", read_json('json/build/final_frequency_dict_ru.json')],
-        # ["sk", read_json('json/build/final_frequency_dict_sk.json')],
-        # ["sl", read_json('json/build/final_frequency_dict_sl.json')],
-        # ["sr", read_json('json/build/final_frequency_dict_sr.json')],
-        # ["uk", read_json('json/build/final_frequency_dict_uk.json')]
+        ["ru", read_json('json/build/final_frequency_dict_ru.json')],
+        ["sk", read_json('json/build/final_frequency_dict_sk.json')],
+        ["sl", read_json('json/build/final_frequency_dict_sl.json')],
+        ["sr", read_json('json/build/final_frequency_dict_sr.json')],
+        ["uk", read_json('json/build/final_frequency_dict_uk.json')]
     ]
     for dict in dicts:
-        frequency_list = convert_to_flat_list(dict[0], dict[1]["frequency_order"])
-        rare_list = convert_to_flat_list(dict[0], dict[1]["random_order"])
-        complete_list = frequency_list + rare_list 
-        save_csv('csv/'+dict[0]+'.csv', complete_list)
+        lang = dict[0]
+        frequency_list = convert_to_flat_list(lang, dict[1]["frequency_order"])
+        rare_list = convert_to_flat_list(lang, dict[1]["random_order"])
+        save_csv('csv/common_'+dict[0]+'.csv', frequency_list)
+        save_csv('csv/rare_'+dict[0]+'.csv', rare_list)
 
 if __name__ == '__main__':
     main()
