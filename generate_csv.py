@@ -1,137 +1,152 @@
 import json
-import re
 import csv
+import pprint
+pp = pprint.PrettyPrinter()
 
-class Word:
-    def __init__(self, list, n):
-        self.__value = list[n]
-        w = self.__value
-        self.id          = w[0]
-        self.addition    = w[2]
-        self.pos         = w[3]
-        self.interslavic = w[1]
-        self.english     = w[4]  
-        self.russian     = w[5]  # 150M
-        self.belarusian  = w[6]  # 5.1M
-        self.ukrainian   = w[7]  # 40M
-        self.polish      = w[8]  # 45M
-        self.czech       = w[9]  # 10.7M
-        self.slovak      = w[10] # 5.2M
-        self.bulgarian   = w[11] # 8M
-        self.macedonian  = w[12] # 3M
-        self.serbian     = w[13] # 12M
-        self.croatian    = w[14] # 5.6M
-        self.slovenian   = w[15] # 2.5M
-    def __repr__(self):
-        return(str(self.__value))
+def save_csv(filename, list):
+    DELIMITER = chr(31)
+    with open(filename, "w") as f:
+        pass
+    print("saving",filename,"...")
+    for row in list:
+        with open(filename, "a", newline='', encoding='utf-8') as f:
+            writer = csv.writer(f, delimiter=DELIMITER)
+            writer.writerow(row)
 
-def remove_duplicates(freq_list):
-    duplicates = {}
-    for i,a in enumerate(freq_list):
-        for j,b in enumerate(freq_list):
-            if(i!=j and a[2] == b[2]):
-                if a[0] not in duplicates:
-                    duplicates[a[2]] = [ a[0] ]
-                if(b[0]) not in duplicates[a[2]]:
-                    duplicates.update({
-                        a[2]: duplicates[a[2]] + [ b[0] ]
-                    }) 
-    idx_to_pop = []
-    for dups in duplicates.values():
-        min_freq = min(dups)
-        dups.remove(min_freq)
-        for idx in dups:
-            l1 = freq_list[min_freq]
-            l2 = freq_list[idx]
-            for i in range(5,len(l1)):
-                v1 = [x.strip() for x in l1[i].split(",")]
-                v2 = [x.strip() for x in l2[i].split(",")]
-                l1[i] = ", ".join(list(set(v1+v2)))
-            idx_to_pop.append(idx)
-    idx_to_pop.sort(reverse=1)
-    for idx in idx_to_pop:
-        freq_list.pop(idx)
-    for el in freq_list:
-        el.pop(0)
+def read_json(freq_path):
+    with open(freq_path, 'r', encoding='utf-8') as f_json:
+        freq = json.load(f_json)
+    print("read",freq_path,"...")
+    return freq
 
-def getAlternatingFreqList(list1, list2):
-    bigger_list = list1 if len(list1) > len(list2) else list2
-    smaller_list = list2 if bigger_list==list1 else list1
+def HTMLify_word(word):
+    return ''.join((
+        "<div class='word'>",
+            word,
+        "</div>"
+    ))
 
-    freq_common = bigger_list.copy()
-    for freq, word in smaller_list.items():
-        freq_common.update({freq: freq_common[freq] + word})
-    
-    freq_word_list = []
-    for entry in freq_common.values():
-        freq_word_list += entry
+def HTMLify_freq(freq):
+        return ''.join((
+        "<div class='freq'>",
+            freq,
+        "</div>"
+    ))
 
-    return list(dict.fromkeys(freq_word_list))
+def HTMLify_partOfSpeech(definitions, lang):
+    def getUniversality(str_freq_count, max_count):
+        freq_count = int(str_freq_count)
+        ratio = freq_count / max_count
+        margins = sorted({
+            'common': 0.8,
+            'universal': 1,
+            'unusual': 0.5,
+            'uncommon': 1/max_count,
+            'rare': 0
+        }.items(), key=lambda x: x[1], reverse=True)
+        for margin in margins:
+            if margin[1] >= ratio:
+                label = margin[0]
+        return ''.join((
+            "<span class='",label,"'>",
+                label, " (", str(int(ratio*100)), "%*)",
+            "</span>"
+        ))
 
-def getFinalFreqList(freq_word_list, dictionary):
-    final_freq_list = []
-    for freq_word in freq_word_list[:10]:
-        print(freq_word)
-        for _ in range(1,len(dictionary)):
-            w = Word(dictionary,_)
-            word_pl = [re.sub(r"\((.*?)\)", "", x).strip() for x in w.polish.split(",")]
-            word_ru = [re.sub(r"\((.*?)\)", "", x).strip() for x in w.russian.split(",")]
-            if ((freq_word in word_pl or freq_word in word_ru) 
-            and dictionary[_] not in final_freq_list):
-                final_freq_list.append(dictionary[_])
-    for i,e in enumerate(final_freq_list):
-        final_freq_list[i] = [i] + e
-    return final_freq_list
+    ol_list = []
+    translation_direction = "" if lang == 'isv' else "&lang=isv-"+lang
+    for definition in definitions:
+        li = ''.join((
+            "<li>",
+                "<a href='https://interslavic-dictionary.com/?text=id" + definition['id'] + translation_direction + "'>",
+                    definition['partOfSpeech'],
+                "</a>",
+                " [freq. ", definition['freq'], "; ", getUniversality(definition['freq_count'], 5), "]",
+            "</li>"
+        ))
+        ol_list.append(li)
+
+    return ''.join((
+        "<div class='partOfSpeech'>",
+            "<ol>",
+                *ol_list,
+            "</ol>",
+        "</div>"
+    ))
+
+
+def definitions_to_ol(definitions, key):
+    for definition in definitions:
+        ol_list = []
+        li = ''.join((
+            "<li>",
+                '; '.join(definition[key]),
+            "</li>"
+        ))
+        ol_list.append(li)
+    return ''.join((
+        "<div class='",key,"'>",
+            "<ol>",
+                *ol_list,
+            "</ol>",
+        "</div>"
+    ))
+
+def HTMLify_translations(definitions, lang):
+    language_codes = ['isv', 'en', 'ru', 'be', 'uk', 'pl', 'cs', 'sk', 'bg', 'mk', 'sr', 'hr', 'sl']
+    translation_list = []
+    for language_code in language_codes:
+        if(language_code != lang):
+            translation_list.append(definitions_to_ol(definitions, language_code))
+    if(len(translation_list) == len(language_codes) - 1):
+        return translation_list
+    return
+
+
+def convert_to_flat_list(lang, original_list):
+    flat_list = []
+    for entry in original_list:
+        row = []
+        word = entry[0]
+        description = entry[1]
+        definitions = description['definitions']
+        row = [
+            HTMLify_word(word),
+            HTMLify_freq(description['freq']),
+            HTMLify_partOfSpeech(definitions, lang),
+            *HTMLify_translations(definitions, lang),
+            definitions_to_ol(definitions, 'conjugations')
+        ]
+        flat_list.append(row)
+    return flat_list
+
+def create_html_page(flat_list):
+    with open("sample.html", "w", encoding='utf-8') as html_page:
+        for word in flat_list:
+            for tag in word:
+                html_page.write(tag)
 
 def main():
-    DICTIONARY_PATH = 'json/interslavic_dict.json'
-    FREQ_RUSSIAN_PATH = 'json/freq_list_russian.json'
-    FREQ_POLISH_PATH = 'json/freq_list_polish.json'
-    
-    with open(DICTIONARY_PATH, 'r', encoding='utf-8') as d_json:
-        dictionary = json.load(d_json)['wordList']
-    
-    with open(FREQ_RUSSIAN_PATH, 'r', encoding='utf-8') as f_json:
-        freq_ru = json.load(f_json)
-
-    with open(FREQ_POLISH_PATH, 'r', encoding='utf-8') as f_json:
-        freq_pl = json.load(f_json)
-
-    freq_word_list = getAlternatingFreqList(freq_pl, freq_ru)
-    final_interslavic_list = getFinalFreqList(freq_word_list, dictionary)
-
-    with open("freq_interslavic.csv", "w") as f:
-        pass
-
-    DELIMITER = chr(31)
-    for _ in range(0,len(final_interslavic_list)):
-        w = Word(final_interslavic_list,_)
-        data = [
-            _+1,
-            w.interslavic,
-            w.addition,
-            w.russian,
-            w.belarusian,
-            w.ukrainian,
-            w.polish,
-            w.czech,
-            w.slovak,
-            w.bulgarian,
-            w.macedonian,
-            w.serbian,
-            w.croatian,
-            w.slovenian,
-            w.english,
-            w.pos,
-            w.id
-        ]
-        with open("freq_interslavic.csv", "a", newline='', encoding='utf-8') as f:
-            writer = csv.writer(f, delimiter=DELIMITER)
-            writer.writerow(data)
-    
-    print(len(final_interslavic_list))
-    
-
+    dicts = [
+        ["isv", read_json('json/build/final_frequency_dict.json')],
+        ["be", read_json('json/build/final_frequency_dict_be.json')],
+        ["bg", read_json('json/build/final_frequency_dict_bg.json')],
+        ["cs", read_json('json/build/final_frequency_dict_cs.json')],
+        ["en", read_json('json/build/final_frequency_dict_en.json')],
+        ["hr", read_json('json/build/final_frequency_dict_hr.json')],
+        ["mk", read_json('json/build/final_frequency_dict_mk.json')],
+        ["pl", read_json('json/build/final_frequency_dict_pl.json')],
+        ["ru", read_json('json/build/final_frequency_dict_ru.json')],
+        ["sk", read_json('json/build/final_frequency_dict_sk.json')],
+        ["sl", read_json('json/build/final_frequency_dict_sl.json')],
+        ["sr", read_json('json/build/final_frequency_dict_sr.json')],
+        ["uk", read_json('json/build/final_frequency_dict_uk.json')]
+    ]
+    for dict in dicts:
+        frequency_list = convert_to_flat_list(dict[0], dict[1]["frequency_order"])
+        rare_list = convert_to_flat_list(dict[0], dict[1]["random_order"])
+        complete_list = frequency_list + rare_list
+        save_csv('csv/'+dict[0]+'.csv', complete_list)
 
 if __name__ == '__main__':
     main()
