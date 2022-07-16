@@ -61,7 +61,9 @@ def HTMLify_partOfSpeech(definitions, lang):
                 "<a href='https://interslavic-dictionary.com/?text=id" + definition['id'] + translation_direction + "'>",
                     definition['partOfSpeech'],
                 "</a>",
-                " [freq. ", definition['freq'], "; ", getUniversality(definition['freq_count'], 5), "]",
+                "<span class='freq_info'>",
+                getUniversality(definition['freq_count'], 5), " fr.", definition['freq'],
+                "</span>",
             "</li>"
         ))
         ol_list.append(li)
@@ -80,11 +82,9 @@ def concat_isv(definitions):
     for definition in definitions:
         li = ''.join((
             "<li>",
-                "<span class='translations'>",
+                "<span data-text='",'; '.join(definition['conjugations']),"' class='tooltip translation'>",
                 '; '.join(definition['isv']),
-                "</span><span class='conjugations'> (",
-                '; '.join(definition['conjugations']),
-                ")</span>",
+                "</span>",
             "</li>"
         ))
         ol_list.append(li)
@@ -134,7 +134,7 @@ def convert_to_flat_list(lang, original_list):
         word = entry[0]
         description = entry[1]
         definitions = description['definitions']
-        sorted_definitions = sorted(definitions, key=lambda d: d['freq_count']) 
+        sorted_definitions = sorted(definitions, key=lambda d: d['freq_count'], reverse=True) 
         row = [
             HTMLify_word(word, lang),
             HTMLify_freq(description['freq']),
