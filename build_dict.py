@@ -115,25 +115,29 @@ def add_freq_values_to_dict(dict, *freqs):
                     if(compare_lists(entries, dict_definition[language_tag])):
                         dict_definition[freq_key] = freq_position
 
-def add_avg_freq_to_dict(dict):
-    language_indexes = ['en', 'ru', 'be', 'uk', 'pl', 'cs', 'sk', 'bg', 'mk', 'sr', 'hr', 'sl']
+def add_avg_freq_to_dict(dict, *freqs):
     for word,dict_definitions in dict.items():
         for dict_definition in dict_definitions:
             lang_count = 0
             cumulative_freq = 0
-            for lang in language_indexes:
-                if(lang+"_freq" in dict_definition):
+            for freq in freqs:
+                lang = freq[0]
+                punishment = len(freq[1][0]) # max freq
+                if (lang+"_freq" in dict_definition):
                     lang_count += 1
                     cumulative_freq += int(dict_definition[lang+"_freq"])
+                else:
+                    cumulative_freq += punishment
             dict_definition["freq_count"] = str(lang_count)
-            if(lang_count > 0):
-                dict_definition["freq"] = str(int(cumulative_freq/lang_count))
-            else:
-                dict_definition["freq"] = "0"
-        cumulative_freq = 0
+            dict_definition["freq"] = ( str(int(cumulative_freq/lang_count))
+                if lang_count > 0
+                else "0" 
+            )
+        total_cumulative_freq = 0
         for dict_definition in dict_definitions:
-            cumulative_freq += int(dict_definition["freq"])
-        avg_freq = str(int(cumulative_freq/len(dict_definitions)))
+            total_cumulative_freq += int(dict_definition["freq"])
+        avg_freq = str(int(total_cumulative_freq/len(dict_definitions)))
+
         dict[word] = {"avg_freq": avg_freq, "definitions": dict_definitions}
 
 def normalize_freq(dict):
@@ -176,43 +180,45 @@ def sort_by_freq_and_split(dict):
     
 
 def main():
-    MAKE = True
+    # MAKE = False
 
-    # step 0
-    isv_dict = make_dict('json/interslavic_dict.json') if MAKE else read_json('json/build/0.json')
-    if isv_dict is None:
-        print("Error")
-        return
-    if MAKE:
-        save_json(isv_dict, 'json/build/0.json')
+    # # step 0
+    # isv_dict = make_dict('json/interslavic_dict.json') if MAKE else read_json('json/build/0.json')
+    # if isv_dict is None:
+    #     print("Error")
+    #     return
+    # if MAKE:
+    #     save_json(isv_dict, 'json/build/0.json')
     
-    freq_cs = read_json('json/scraped/cs.json')
-    freq_bg = read_json('json/scraped/bg.json')
-    freq_hr = read_json('json/scraped/hr.json')
-    freq_ru = read_json('json/scraped/ru.json')
-    freq_pl = read_json('json/scraped/pl.json')
+    
+    # freq_cs = read_json('json/scraped/cs.json')
+    # freq_bg = read_json('json/scraped/bg.json')
+    # freq_hr = read_json('json/scraped/hr.json')
+    # freq_ru = read_json('json/scraped/ru.json')
+    # freq_pl = read_json('json/scraped/pl.json')
 
 
-    # step 1
-    add_freq_values_to_dict(isv_dict, freq_cs, freq_bg, freq_hr, freq_pl, freq_ru)
-    save_json(isv_dict, 'json/build/1.json')
+    # # # step 1
+    # # add_freq_values_to_dict(isv_dict, freq_cs, freq_bg, freq_hr, freq_pl, freq_ru)
+    # # save_json(isv_dict, 'json/build/1.json')
 
-    # TODO: prioritize words with that are in all freq_lists in step 2
-    #step 2
-    add_avg_freq_to_dict(isv_dict)
-    save_json(isv_dict, 'json/build/2.json')
+    # # TODO: prioritize words with that are in all freq_lists in step 2
+    # #step 2
+    # isv_dict = read_json('json/build/1.json')
+    # add_avg_freq_to_dict(isv_dict, freq_cs, freq_bg, freq_hr, freq_pl, freq_ru)
+    # save_json(isv_dict, 'json/build/2.json')
 
-    # step 3
-    isv_dict = read_json('json/build/2.json')
-    normalize_freq(isv_dict)
-    save_json(isv_dict, 'json/build/3.json')
+    # # step 3
+    # isv_dict = read_json('json/build/2.json')
+    # normalize_freq(isv_dict)
+    # save_json(isv_dict, 'json/build/3.json')
 
-    # step 4
-    isv_dict = sort_by_freq_and_split(isv_dict)
-    save_json(isv_dict, 'json/build/4.json')
+    # # step 4
+    # isv_dict = sort_by_freq_and_split(isv_dict)
+    # save_json(isv_dict, 'json/build/4.json')
 
-    #  final dictionary
-    save_json(isv_dict, 'json/build/final_frequency_dict.json')
+    # #  final dictionary
+    # save_json(isv_dict, 'json/build/final_frequency_dict.json')
 
 
 
