@@ -20,11 +20,20 @@ def read_json(freq_path):
     return freq
 
 def HTMLify_word(word, lang):
-    return ''.join((
-        "<div class='",lang," word'>",
-            word,
-        "</div>"
-    ))
+    if(lang == 'isv'):
+        return ''.join((
+            "<div class='",lang,"'>",
+                "<div class='lat word'>",
+                    word,
+                "</div>",
+            "</div>"
+        ))
+    else:
+        return ''.join((
+            "<div class='",lang," word'>",
+                word,
+            "</div>"
+        ))
 
 def HTMLify_freq(freq):
         return ''.join((
@@ -82,7 +91,7 @@ def concat_isv(definitions):
     for definition in definitions:
         li = ''.join((
             "<li>",
-                "<span data-text='",'; '.join(definition['conjugations']),"' class='tooltip translation'>",
+                "<span class='lat translation'>",
                 '; '.join(definition['isv']),
                 "</span>",
             "</li>"
@@ -173,7 +182,9 @@ def main():
         frequency_list = convert_to_flat_list(lang, dict[1]["frequency_order"])
         rare_list = convert_to_flat_list(lang, dict[1]["random_order"])
         save_csv('csv/common_'+dict[0]+'.csv', frequency_list)
+        print(len(frequency_list))
         save_csv('csv/rare_'+dict[0]+'.csv', rare_list)
+        print(len(rare_list))
 
 if __name__ == '__main__':
     main()

@@ -198,32 +198,22 @@ function enable (id, option)
 	document.getElementById(id).options[option].disabled = false; document.getElementById(id).options[option].style.display = "inline";
 }
 
-function transliterate (iSource, type, flav, caps, nms)
+function transliterate (word) // word
 {
-	var text = iSource;
+	const type = 5
+	const flav = '3'
+	const caps = 0
+	const nms = 1
 	var result = "";
 
-	if (!flav)						{ flav = "2"; }
-	if (caps == 0)						{  }
-	else if (caps == 1)					{ iSource = iSource.toUpperCase(); }
-	else if (caps == 2)					{ iSource = iSource.toLowerCase(); }
+	word = word.replace (/{/g,"<{");
+	word = word.replace (/}/g,"}>");
 
-	if (nms != "2")						{ nms = 1; }
-
-	if ((type == 2) && (flav == "2"))			{ flav = "3"; }
-	else if ((type == 5) && (flav == "2"))			{ flav = "3"; }
-	else if ((type == 6) && (flav == "2"))			{ flav = "1"; }
-	else if ((type == 22) && (flav == "2"))			{ flav = "3"; }
-
-
-	iSource = iSource.replace (/{/g,"<{");
-	iSource = iSource.replace (/}/g,"}>");
-
-	iSource = iSource.replace (/'''/g,"❸"); 
-	iSource = iSource.replace (/''/g,"❷");
-	iSource = iSource.replace (/'‘’‛/g,"’");
-	iSource = iSource.replace (/\t/g,"₮");
-	iSource = iSource.replace (/\n/g,"₦");
+	word = word.replace (/'''/g,"❸"); 
+	word = word.replace (/''/g,"❷");
+	word = word.replace (/'‘’‛/g,"’");
+	word = word.replace (/\t/g,"₮");
+	word = word.replace (/\n/g,"₦");
 
 	var teken = new Array();
 	teken[0] = '!'; teken[1] = '"'; teken[2] = '&'; teken[3] = '('; teken[4] = ')'; teken[5] = ','; teken[6] = '-'; teken[7] = '.'; teken[8] = '/'; 
@@ -231,38 +221,38 @@ function transliterate (iSource, type, flav, caps, nms)
 	teken[17] = '}'; teken[18] = '|'; teken[19] = '«'; teken[20] = '»'; teken[21] = '–'; teken[22] = '—'; teken[23] = '‚'; teken[24] = '%';
 	teken[25] = '“'; teken[26] = '”'; teken[27] = '„'; teken[28] = '‟'; teken[29] = '|'; teken[30] = '='; teken[31] = '₮'; teken[32] = '₦'; teken[33] = '❷'; teken[34] = '❸';
 
-	while (iSource != "")
+	while (word != "")
 	{
 		var nextW = "";
-		var nextSpace = iSource.indexOf (" ");
-		var nextHook  = iSource.indexOf ("<");
+		var nextSpace = word.indexOf (" ");
+		var nextHook  = word.indexOf ("<");
 
 		var x;
 		for (x in teken)
 		{
-			if ((iSource.indexOf (teken[x]) < nextSpace) && (iSource.indexOf (teken[x]) > -1))
+			if ((word.indexOf (teken[x]) < nextSpace) && (word.indexOf (teken[x]) > -1))
 			{
-				nextSpace = iSource.indexOf (teken[x]);
+				nextSpace = word.indexOf (teken[x]);
 			}
-			else if ((nextSpace == -1) && (iSource.indexOf (teken[x]) > -1))
+			else if ((nextSpace == -1) && (word.indexOf (teken[x]) > -1))
 			{
-				nextSpace = iSource.indexOf (teken[x]);
+				nextSpace = word.indexOf (teken[x]);
 			}
 		}
 
 
 		if ((nextHook != -1) && ((nextSpace == -1) || (nextHook < nextSpace)))
 		{
-			nextW = iSource.substring (0, nextHook); 
-			iSource = iSource.substring (nextHook + 1, iSource.length);
+			nextW = word.substring (0, nextHook); 
+			word = word.substring (nextHook + 1, word.length);
 			result += transliterateW (nextW, type, flav, nms);
 			result += "<";
 
-			var nextRHook = iSource.indexOf (">");
+			var nextRHook = word.indexOf (">");
 			if (nextRHook != -1)
 			{
-				nextW = iSource.substring (0, nextRHook); 
-				iSource = iSource.substring (nextRHook + 1, iSource.length);
+				nextW = word.substring (0, nextRHook); 
+				word = word.substring (nextRHook + 1, word.length);
 
 				if ((type > 4) && (nextW.indexOf ("|") != -1))
 				{	nextW = nextW.substring (nextW.indexOf ("|") + 1, nextW.length);
@@ -281,34 +271,23 @@ function transliterate (iSource, type, flav, caps, nms)
 		}
 		else if (nextSpace == -1)
 		{
-			nextW = iSource; 
-			iSource = "";
+			nextW = word; 
+			word = "";
 			result += transliterateW (nextW, type, flav, nms);
 		}
 		else if (nextSpace == 0)
 		{ 
-			result += iSource.charAt (nextSpace);
-			iSource = iSource.substring (1, iSource.length);
+			result += word.charAt (nextSpace);
+			word = word.substring (1, word.length);
 		}
 		else
 		{
-			nextW = iSource.substring (0, nextSpace);
+			nextW = word.substring (0, nextSpace);
 			result += transliterateW (nextW, type, flav, nms);
 
-			var leesteken = iSource.charAt (nextSpace); 
-			if (type == 17)
-			{ 
-				if      (leesteken == ".")	{ leesteken =  "።"; }
-				else if (leesteken == ",")	{ leesteken =  "፣"; }
-				else if (leesteken == ";")	{ leesteken =  "፤"; }
-				else if (leesteken == ":")	{ leesteken =  "፥"; }
-			}
-			else if (type == 18)
-			{ 
-				if      (leesteken == ".")	{ leesteken =  "।"; }
-			}
+			var leesteken = word.charAt (nextSpace); 
 			result += leesteken;
-			iSource = iSource.substring (nextSpace + 1, iSource.length);
+			word = word.substring (nextSpace + 1, word.length);
 		}
 		
 	}
@@ -319,81 +298,7 @@ function transliterate (iSource, type, flav, caps, nms)
 	result = result.replace (/❸/g,"'''"); 
 	result = result.replace (/❷/g,"''");
 
-	if ((type == 7) && (flav != "J"))
-	{
-		result = result.replace (/ - /g," – "); 
-		i = 0; endresult = ""; while (i < result.length)
-		{	nextChar = result.charAt (i);
-			     if (nextChar == ".") { resultChar = " ⁙ "; }
-			else if (nextChar == "!") { resultChar = " ⁙ "; }
-			else if (nextChar == ",") { resultChar = " · "; }
-			else if (nextChar == ";") { resultChar = " ⁙ "; }
-			else if (nextChar == ":") { resultChar = " · "; }
-			else if (nextChar == "?") { resultChar = " ; "; }
-			else if (nextChar == "«") { resultChar = " ⸫ "; }
-			else if (nextChar == "»") { resultChar = " ⸫ "; }
-			else if (nextChar == "(") { resultChar = " ⁖ "; }
-			else if (nextChar == ")") { resultChar = " ⁖ "; }
-			else if (nextChar == "'") { resultChar = " ⸪ "; }
-			else if (nextChar == '"') { resultChar = " ⸪ "; }
-			else if (nextChar == "-") { resultChar = " · "; }
-			else if (nextChar == "–") { resultChar = " ⸭ "; }
-			else if (nextChar == "—") { resultChar = " ⸭ "; }
-			else			  { resultChar = nextChar; }
-			i++;
-			endresult += resultChar;
-		}
-		result = endresult; 
-	}
-	else if (type == 21)
-	{
-		var i = 0; var endresult = ""; var nextChar = ""; var resultChar = "";
-		while (i < result.length)
-		{	nextChar = result.charAt (i);
-			resultChar = nextChar;
-			switch (nextChar)
-			{	case String.fromCharCode(46):	{	resultChar = ""; break;	} /* . */
-				case String.fromCharCode(44):	{	resultChar = ""; break;	} /* , */
-				case String.fromCharCode(59):	{	resultChar = ""; break;	} /* ; */
-				case String.fromCharCode(58):	{	resultChar = ""; break;	} /* : */
-				case String.fromCharCode(63):	{	resultChar = ""; break;	} /* ? */
-				case String.fromCharCode(33):	{	resultChar = ""; break;	} /* ! */
-				case String.fromCharCode(91):	{	resultChar = ""; break;	} /* [ */
-				case String.fromCharCode(93):	{	resultChar = ""; break;	} /* ] */
-				case String.fromCharCode(40):	{	resultChar = ""; break;	} /* ( */
-				case String.fromCharCode(41):	{	resultChar = ""; break;	} /* ) */
-				case String.fromCharCode(45):	{	resultChar = ""; break;	} /* - */
-				case String.fromCharCode(8211):	{	resultChar = ""; break;	} /* - */
-				case String.fromCharCode(8212):	{	resultChar = ""; break;	} /* - */
-			}		
-			i++;
-			endresult += resultChar;
-		}
-		result = endresult;	
-	}
-	else if (type == 22)
-	{
-		var i = 0; var endresult = ""; var nextChar = ""; var resultChar = "";
-		while (i < result.length)
-		{	nextChar = result.charAt (i);
-			     if (nextChar == ".") { resultChar = "。"; }
-			else if (nextChar == ",") { resultChar = "、"; }
-			else if (nextChar == "?") { resultChar = "？"; }
-			else if (nextChar == "!") { resultChar = "！"; }
-			else if (nextChar == "«") { resultChar = "「"; }
-			else if (nextChar == "»") { resultChar = "」"; }
-			else if (nextChar == "„") { resultChar = "『"; }
-			else if (nextChar == "”") { resultChar = "』"; }
-			else if (nextChar == "–") { resultChar = "゠"; }
-			else if (nextChar == " ") { resultChar = "・"; }
-			else			  { resultChar = nextChar; }
-			i++;
-			endresult += resultChar;
-		}
-		result = endresult;	
-		result = result.replace (/([。、？！])・/g,"$1 "); result = result.replace (/([・」』])・/g,"$1"); result = result.replace (/・([「『・])/g,"$1");
-		result = result.replace (/・([0123456789])/g,"$1"); result = result.replace (/([0123456789])・/g,"$1"); 
-	}
+
 
 	return result;
 }

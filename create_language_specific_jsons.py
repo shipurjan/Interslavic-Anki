@@ -1,6 +1,4 @@
 import csv
-import js2py
-eval_res, tempfile = js2py.run_file("transliteration.js")
 import json
 import pprint
 import random
@@ -86,38 +84,30 @@ def add_avg_freq_to_dict(dictionary):
         avg_freq = str(int(cumulative_freq/len(definitions)))
         dictionary[entry] = {'avg_freq': avg_freq, 'definitions': definitions}
 
-def normalize_freq(dict):
-    positive_freq_count = 0
-    max_freq = 0
-    for word, body in dict.items():
-        freq = int(body['avg_freq'])
-        if(freq != 0):
-            positive_freq_count += 1
-            if(freq > max_freq):
-                max_freq = freq
-        else:
-            body['freq'] = "0"
+def normalize_freq(dictionary):
     print("normalizing...")
-    current_freq = max_freq
-    left_to_normalize = positive_freq_count
-    while(left_to_normalize > 0):
-        log_percent(1 - (current_freq/max_freq))
-        for word, body in dict.items():
-            freq = int(body['avg_freq'])
-            if(freq == current_freq):
-                body['freq'] = str(left_to_normalize)
-                left_to_normalize -= 1
-        current_freq -= 1
+    freq = 1
+    d = sorted(dictionary.items(), key=lambda x:int(x[1]['avg_freq']))
+    for i, (entry, definitions) in enumerate(d):
+        log_percent(i/len(d))
+        if(definitions['avg_freq'] != '0'):
+            dictionary[entry]['freq'] = str(freq)
+            freq += 1
+        else:
+            definitions['freq'] = "0"
 
 def merge_identical_definitions(dictionary):
     def find_intersection(m_list):
-        for i,v in enumerate(m_list) : 
-            for j,k in enumerate(m_list[i+1:],i+1):  
-               if v & k:
-                  s[i]=v.union(m_list.pop(j))
-                  if("".join([random.choice(string.digits) for _ in range(3)]) == "000"):
-                    print(len(m_list))
-                  return find_intersection(m_list)
+        while(1):
+            change = 0
+            for i,v in enumerate(m_list) : 
+                for j,k in enumerate(m_list[i+1:],i+1):  
+                    if v & k:
+                        s[i] = v.union(m_list.pop(j))
+                        change += 1
+                        break
+            if(change == 0):
+                break
         return m_list
     print("finding identical definitions...")
     list_dict = list(dictionary.items())
@@ -143,16 +133,6 @@ def merge_identical_definitions(dictionary):
     for key in keys_to_pop:
         dictionary.pop(key)
 
-def add_cyryllic_transliteration_to_dict(dictionary):
-    def transliterate_wordlist(list):
-        newlist = []
-        for word in list:
-            newlist.append(tempfile.transliterate(word, 5, '3', 0, 1))
-        return newlist
-    for word, body in dictionary.items():
-        definitions = body['definitions']
-        for definition in definitions:
-            definition["isv_cyr"] = transliterate_wordlist(definition['isv'])
 
 def create_language_dict(dictionary, lang):
     related_words = find_related_words(dictionary, lang)
@@ -167,7 +147,6 @@ def create_language_dict(dictionary, lang):
     merge_identical_definitions(d)
     add_avg_freq_to_dict(d)
     normalize_freq(d)
-    add_cyryllic_transliteration_to_dict(d)
     new_d = sort_by_freq_and_split(d)
     return new_d
 
@@ -190,12 +169,11 @@ def sort_by_freq_and_split(dict):
 def main():
     
     dictionary = read_json('json/build/final_frequency_dict.json')
-    language_codes = ['pl'] # ['en', 'ru', 'be', 'uk', 'pl', 'cs', 'sk', 'bg', 'mk', 'sr', 'hr', 'sl']
+    language_codes = ['en', 'ru', 'be', 'uk', 'pl', 'cs', 'sk', 'bg', 'mk', 'sr', 'hr', 'sl']
 
     for language_code in language_codes:
         tmp_dict = create_language_dict(dictionary, language_code)
         save_json(tmp_dict, 'json/build/final_frequency_dict_'+language_code+'.json')
-
 
 if __name__ == '__main__':
     main()

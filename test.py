@@ -18,7 +18,6 @@ def main():
         # ["hr", read_json('json/build/final_frequency_dict_hr.json')],
         # ["mk", read_json('json/build/final_frequency_dict_mk.json')],
         ["pl", read_json('json/build/final_frequency_dict_pl.json')],
-        ["pl_before", read_json('json/build/final_frequency_dict_pl - Copy.json')],
         # ["ru", read_json('json/build/final_frequency_dict_ru.json')],
         # ["sk", read_json('json/build/final_frequency_dict_sk.json')],
         # ["sl", read_json('json/build/final_frequency_dict_sl.json')],

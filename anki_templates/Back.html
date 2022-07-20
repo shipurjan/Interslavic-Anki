@@ -3,22 +3,68 @@
 <div class="pos">
 	{{Part of speech}}
 	<small class='info'>*procent list čęstot, vo ktoryh izstupil ov prěklad</small>
+	<small class='info'>*процент лист честот, во кторых изступил ов прєклад</small>
 </div>
 
 <hr>
 
 <div class='translations'>
-	<span class='primary'><div><img src='_isv.svg'/></div>	{{Interslavic}}</span>
-	<span class='primary'><div><img src='_en.svg'/></div>	{{English}}</span>
-	<span class=''><div><img src='_ru.svg'/></div>				 	{{Russian}}</span>
-	<span class=''><div><img src='_uk.svg'/></div>				 	{{Ukrainian}}</span>
-	<span class=''><div><img src='_be.svg'/></div>				 	{{Belarusian}}</span>
-	<span class=''><div><img src='_cs.svg'/></div>				 	{{Czech}}</span>
-	<span class=''><div><img src='_sk.svg'/></div>				 	{{Slovak}}</span>
-	<span class=''><div><img src='_bg.svg'/></div>				 	{{Bulgarian}}</span>
-	<span class=''><div><img src='_mk.svg'/></div>				 	{{Macedonian}}</span>
-	<span class=''><div><img src='_sr.svg'/></div>				 	{{Serbian}}</span>
-	<span class=''><div><img src='_hr.svg'/></div>				 	{{Croatian}}</span>
-	<span class=''><div><img src='_sl.svg'/></div>				 	{{Slovene}}</span>
+	<span class='primary'>
+		<div><img src='_isv.svg' /></div> {{Interslavic}}
+	</span>
+	<span class='primary'>
+		<div><img src='_en.svg' /></div> {{English}}
+	</span>
+	<span class=''>
+		<div><img src='_ru.svg' /></div> {{Russian}}
+	</span>
+	<span class=''>
+		<div><img src='_uk.svg' /></div> {{Ukrainian}}
+	</span>
+	<span class=''>
+		<div><img src='_be.svg' /></div> {{Belarusian}}
+	</span>
+	<span class=''>
+		<div><img src='_cs.svg' /></div> {{Czech}}
+	</span>
+	<span class=''>
+		<div><img src='_sk.svg' /></div> {{Slovak}}
+	</span>
+	<span class=''>
+		<div><img src='_bg.svg' /></div> {{Bulgarian}}
+	</span>
+	<span class=''>
+		<div><img src='_mk.svg' /></div> {{Macedonian}}
+	</span>
+	<span class=''>
+		<div><img src='_sr.svg' /></div> {{Serbian}}
+	</span>
+	<span class=''>
+		<div><img src='_hr.svg' /></div> {{Croatian}}
+	</span>
+	<span class=''>
+		<div><img src='_sl.svg' /></div> {{Slovene}}
+	</span>
 </div>
 
+<script> 
+ /* 
+	Script displaying cyrillic transliteration, don't change :)
+	Source: http://steen.free.fr/scripts/transliteration.js
+*/
+
+	function transliterateW(e){e="%"+e+"%",OrigW=e;var r=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=e.toLowerCase()).replace(/[яꙗ]/g,"#a")).replace(/ьа/g,"#a")).replace(/ѥ/g,"#e")).replace(/ье/g,"#e")).replace(/ї/g,"#i")).replace(/ьи/g,"#i")).replace(/ё/g,"#o")).replace(/ьо/g,"#o")).replace(/ю/g,"#u")).replace(/ьу/g,"#u")).replace(/ѩ/g,"#ę")).replace(/ьѧ/g,"#ę")).replace(/ѭ/g,"#ų")).replace(/ьѫ/g,"#ų")).replace(/нь/g,"ń")).replace(/н#/g,"nj")).replace(/њ/g,"nj")).replace(/ль/g,"ĺ")).replace(/л#/g,"lj")).replace(/љ/g,"lj")).replace(/рь/g,"ŕ")).replace(/р#/g,"ŕ")).replace(/ть/g,"ť")).replace(/т#/g,"ť")).replace(/дь/g,"ď")).replace(/д#/g,"ď")).replace(/сь/g,"ś")).replace(/с#/g,"ś")).replace(/зь/g,"ź")).replace(/з#/g,"ź")).replace(/ь%/g,"%")).replace(/[ђѓ]/g,"đ")).replace(/[ћќ]/g,"ć")).replace(/ѕ/g,"dz")).replace(/џ/g,"dž")).replace(/а/g,"a")).replace(/б/g,"b")).replace(/в/g,"v")).replace(/[гґ]/g,"g")).replace(/д/g,"d")).replace(/[еэ]/g,"e")).replace(/[єѣ]/g,"ě")).replace(/ж/g,"ž")).replace(/[зꙁꙀ]/g,"z")).replace(/[иіѵѷ]/g,"i")).replace(/[йјь#]/g,"j")).replace(/к/g,"k")).replace(/л/g,"l")).replace(/м/g,"m")).replace(/н/g,"n")).replace(/[оѡ]/g,"o")).replace(/п/g,"p")).replace(/р/g,"r")).replace(/с/g,"s")).replace(/[тѳ]/g,"t")).replace(/[уȣѹ]/g,"u")).replace(/ф/g,"f")).replace(/х/g,"h")).replace(/ц/g,"c")).replace(/ч/g,"č")).replace(/ш/g,"š")).replace(/щ/g,"šč")).replace(/[ыꙑ]/g,"y")).replace(/ъ/g,"q")).replace(/ў/g,"ŭ")).replace(/ѧ/g,"ę")).replace(/ѫ/g,"ų")).replace(/ѱ/g,"ps")).replace(/ѯ/g,"ks")).replace(/⁙/g,".")).replace(/zsk/g,"z#sk")).replace(/zst/g,"z#st")).replace(/%izs/g,"%iz#s")).replace(/%bezs/g,"%bez#s")).replace(/%razs/g,"%raz#s")).replace(/%råzs/g,"%råz#s")).replace(/konjug/g,"kon#jug")).replace(/konjun/g,"kon#jun")).replace(/injek/g,"in#jek")).replace(/s[xz]/g,"š")).replace(/c[xz]/g,"č")).replace(/z[xs]/g,"ž")).replace(/ż/g,"ž")).replace(/ye/g,"ě")).replace(/qu/g,"kv")).replace(/ŀ/g,"ȯl")).replace(/[ăq`]/g,"’")).replace(/ch/g,"h")).replace(/w/g,"v")).replace(/x/g,"ks")).replace(/[áàâā]/g,"a")).replace(/[íìîīĭı]/g,"i")).replace(/[úûůū]/g,"u")).replace(/[ąǫũ]/g,"ų")).replace(/ù/g,"ŭ")).replace(/[éē]/g,"e")).replace(/[ĕëè]/g,"ė")).replace(/œóô/g,"o")).replace(/[ŏöò]/g,"ȯ")).replace(/ý/g,"y")).replace(/ł/g,"l")).replace(/ç/g,"c")).replace(/ʒ/g,"z")).replace(/ĵ/g,"j")).replace(/[ĺļǉ]/g,"ľ")).replace(/[ňñņǌ]/g,"ń")).replace(/ř/g,"ŕ")).replace(/t́/g,"ť")).replace(/d́/g,"ď")).replace(/([jćđšžč])y/g,"$1i")).replace(/jj/g,"j")).replace(/ŕ/g,"ř")).indexOf("ř"),a=/[aeiouyąęųåėȯèòěê]/;r>1&&"%"!=e.charAt(r-1)&&0==a.test(e.charAt(r-1))&&0==a.test(e.charAt(r+1))&&(e=e.substring(0,r)+"ŕ"+e.substring(r+1,e.length));var c=(e=(e=e.replace(/rj/g,"Rj")).replace(/jr/g,"jR")).indexOf("r");a=/[aeiouyąęųåėȯèòěê]/;return c>1&&"%"!=e.charAt(c-1)&&0==a.test(e.charAt(c-1))&&0==a.test(e.charAt(c+1))&&(e=(e=e.substring(0,c)+"ṙ"+e.substring(c+1,e.length)).replace(/([šžčc])ṙ/g,"$1ŕ")),e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=e.replace(/R/g,"r")).replace(/x/g,"ks")).replace(/([ńľřťďśź])j/g,"$1ıj")).replace(/([dsz])j/g,"$1#j")).replace(/%obj/g,"ob#j")).replace(/%neobj/g,"neob#j")).replace(/%vj/g,"v#j")).replace(/ê/g,"ě")).replace(/ȯ%/g,"o%")).replace(/ŭ/g,"v")).replace(/[ṱḓ]/g,"")).replace(/[’`]/g,"#%")).replace(/([čšžj])ě/g,"$1e")).replace(/[ęė]/g,"e")).replace(/å/g,"a")).replace(/ȯ/g,"o")).replace(/ų/g,"u")).replace(/ć/g,"č")).replace(/đ/g,"dž")).replace(/ř/g,"r")).replace(/ľ/g,"l")).replace(/ń/g,"n")).replace(/ť/g,"t")).replace(/ď/g,"d")).replace(/ś/g,"s")).replace(/ź/g,"z")).replace(/lj/g,"љ")).replace(/nj/g,"њ")).replace(/a/g,"а")).replace(/å/g,"ӑ")).replace(/b/g,"б")).replace(/c/g,"ц")).replace(/ć/g,"ћ")).replace(/č/g,"ч")).replace(/[dḓ]/g,"д")).replace(/ď/g,"дь")).replace(/đ/g,"ђ")).replace(/e/g,"е")).replace(/ę/g,"ѧ")).replace(/ě/g,"є")).replace(/f/g,"ф")).replace(/g/g,"г")).replace(/h/g,"х")).replace(/i/g,"и")).replace(/j/g,"ј")).replace(/k/g,"к")).replace(/l/g,"л")).replace(/ľ/g,"ль")).replace(/m/g,"м")).replace(/n/g,"н")).replace(/ń/g,"нь")).replace(/o/g,"о")).replace(/ȯ/g,"ъ")).replace(/p/g,"п")).replace(/r/g,"р")).replace(/ř/g,"рь")).replace(/s/g,"с")).replace(/ś/g,"сь")).replace(/š/g,"ш")).replace(/[tṱ]/g,"т")).replace(/ť/g,"ть")).replace(/u/g,"у")).replace(/ų/g,"ѫ")).replace(/ŭ/g,"ў")).replace(/v/g,"в")).replace(/y/g,"ы")).replace(/z/g,"з")).replace(/ź/g,"зь")).replace(/ž/g,"ж")).replace(/’/g,"ъ")).replace(/`/g,"’")).replace(/jj/g,"j")).replace(/[#ı%]/g,""),OrigW=OrigW.replace(/%/g,""),e=e.replace(/℅/g,"%")}
+	var isv_lat = document.getElementsByClassName('isv')[0];
+	var ol = isv_lat.getElementsByTagName("ol")[0];
+	var lis = ol.getElementsByTagName("li");
+	for (let li of lis) {
+		var span_lat = li.getElementsByClassName('lat')[0];
+		var lat = span_lat.innerHTML;
+		var cyr = document.createTextNode(transliterateW(lat));
+		var span_cyr = document.createElement('span');
+		span_cyr.classList.add('cyr');
+		span_cyr.classList.add('translation');
+		span_cyr.appendChild(cyr);
+		li.appendChild(span_cyr);
+	}
+</script>

@@ -1,192 +1,232 @@
 	/* init */
-    head, body {
-        margin: 2em auto;
-        padding: 2em;
-        max-width: 960px;
-        }
-        
-            /* .card */
-        .card {
-        font-size: 12pt;
-        background-color: #F9EAE1;
-        color: #12130F;
-        font-family: 'Roboto', sans-serif;
-        font-weight: 400;
-        }
-        
-        .card.nightMode {
-        background-color: #12130F;
-        color: #F9EAE1;
-        }
-        
-        @font-face {
-          font-family: 'Roboto'; src: url('_Roboto-Light.ttf') format('truetype');
-          font-weight: 300; font-style: normal; }
-        @font-face {
-            font-family: 'Roboto'; src: url('_Roboto-LightItalic.ttf') format('truetype');
-          font-weight: 300; font-style: italic; }
-        @font-face {
-          font-family: 'Roboto'; src: url('_Roboto-Regular.ttf') format('truetype');
-          font-weight: normal; font-style: normal; }
-        @font-face {
-          font-family: 'Roboto'; src: url('_Roboto-Italic.ttf') format('truetype');
-          font-weight: normal; font-style: italic; }
-        @font-face {
-          font-family: 'Roboto'; src: url('_Roboto-Medium.ttf') format('truetype');
-          font-weight: 500; font-style: normal; }
-        @font-face {
-          font-family: 'Roboto'; src: url('_Roboto-MediumItalic.ttf') format('truetype');
-          font-weight: 500; font-style: italic; }
-        @font-face {
-          font-family: 'Roboto'; src: url('_Roboto-Bold.ttf') format('truetype');
-          font-weight: 700; font-style: normal; }
-        @font-face {
-          font-family: 'Roboto'; src: url('_Roboto-BoldItalic.ttf') format('truetype');
-          font-weight: 700; font-style: italic; }
-        
-        @counter-style glagolica {
-          system: fixed; suffix: " ";
-          symbols: Ⰰ Ⰱ Ⰲ Ⰳ Ⰴ Ⰵ Ⰶ Ⰷ Ⰸ Ⰹ Ⰻ Ⰼ Ⰽ Ⰾ Ⰿ Ⱀ Ⱁ Ⱂ Ⱃ Ⱄ Ⱅ Ⱆ Ⱇ Ⱈ Ⱋ Ⱌ Ⱍ Ⱎ Ⱏ Ⱏ Ⱐ Ⱑ Ⱖ Ⱓ Ⱔ Ⱗ Ⱘ Ⱙ Ⱚ Ⱛ;
-        }
-        
-        .freq{
-            position: absolute;
-            top: 0;
-            left: 0;
-            text-align: center;
-          width: 100%;
-            user-select: none;
-        }
-        .freq:before{
-            content: "freq: ";
-        }
-        
-        img{
-        width: calc(4em /3);
-        height: 1em;
-        }
-        
-        .universal { color: #47af47; }
-        .common { color: #57a2d7; }
-        .unusual { color: #b97521; }
-        .uncommon { color: #8d4cb5; }
-        .rare { color: #d94444; }
-        
-        a { color: #de1c30; text-decoration: underline dotted 1px; }
-        a:hover { color: #001c89; }
-        .nightMode a:hover { color: #ffde00; }
-        
-        ol {
-            display: flex;
-            flex-direction: column;
-            flex-wrap: wrap;
-            padding: 0;
-            margin: 0;
-        }
-        ol li {
-            list-style: glagolica;
-        }
-        
-        .pos{ margin-bottom: 1em; }
-        .partOfSpeech {
-            display: flex;
-            justify-content: center;
-        }
-        .partOfSpeech a{
-            float: left;
-            margin-right: 1em;
-        }
-        .partOfSpeech .freq_info{
-            float: right;
-            margin-left: 1em;
-        }
-        
-        .info{
-        font-weight: 300;
-        display: block;
-        text-align: center;
-        }
-        
-        .partOfSpeech a:after {
-            content: "";
-            display: inline-block;
-            background: url("_interslavic-dictionary-logo.png") no-repeat top right;
-            background-size: cover;
-            width: 12px;
-            height: 12px;
-        }
-        
-        .main_word{
-            display: block;
-            text-align: center;
-            margin-bottom: 1em;
-            font-size: 2em;
-            font-weight: 700;
-        }
-        
-        .translations {
-          display: flex;
-          flex-wrap: wrap;
-            justify-content: space-evenly;
-            gap: 2em;
-          align-items: center;
-        }
-        
-        .translations li{
-            text-align: justify;
-        }
-        
-        .translations > span:not(.primary){
-            max-width: 480px;
-            opacity: 0.5;
-        }
-        
-        .translations span.primary{
-            font-weight: 500;
-            font-size: 1.25em;
-            width: 100%;
-            display: block;
-            text-align: center;
-        }
-        
-        .translations span.primary .language ol{
-            display: inline-block;
-        }
-        
-        .tooltip {
-          position:relative;
-          text-decoration: underline dotted 1px;
-        }
-        
-        .tooltip:hover{
-            cursor: help;
-        }
-        
-        .tooltip:before {
-          content: attr(data-text);
-          position:absolute;
-          z-index: 1;
-          top:50%;
-          transform:translateY(-50%);
-          left:100%;
-          margin-left:15px; 
-          font-weight: 300;
-          width:200px;
-          padding:10px;
-            border: 1px solid white;
-          border-radius:10px;
-          background:#fdf9f6;
-          color: #20211a;
-          text-align:center;
-            font-size: 0.75em;
-          display:none; 
-        }
-        
-        .nightMode .tooltip:before{
-          background:#20211a;
-            color: #fdf9f6;
-        }
-        
-        .tooltip:hover:before {
-          display:block;
-        }
+	head,
+	body {
+	  margin: 2em auto;
+	  padding: 2em;
+	  max-width: 960px;
+	}
+
+	/* .card */
+	.card {
+	  font-size: 12pt;
+	  background-color: #F9EAE1;
+	  color: #12130F;
+	  font-family: 'Roboto', sans-serif;
+	  font-weight: 400;
+	}
+
+	.card.nightMode {
+	  background-color: #12130F;
+	  color: #F9EAE1;
+	}
+
+	@font-face {
+	  font-family: 'Roboto';
+	  src: url('_Roboto-Light.ttf') format('truetype');
+	  font-weight: 300;
+	  font-style: normal;
+	}
+
+	@font-face {
+	  font-family: 'Roboto';
+	  src: url('_Roboto-LightItalic.ttf') format('truetype');
+	  font-weight: 300;
+	  font-style: italic;
+	}
+
+	@font-face {
+	  font-family: 'Roboto';
+	  src: url('_Roboto-Regular.ttf') format('truetype');
+	  font-weight: normal;
+	  font-style: normal;
+	}
+
+	@font-face {
+	  font-family: 'Roboto';
+	  src: url('_Roboto-Italic.ttf') format('truetype');
+	  font-weight: normal;
+	  font-style: italic;
+	}
+
+	@font-face {
+	  font-family: 'Roboto';
+	  src: url('_Roboto-Medium.ttf') format('truetype');
+	  font-weight: 500;
+	  font-style: normal;
+	}
+
+	@font-face {
+	  font-family: 'Roboto';
+	  src: url('_Roboto-MediumItalic.ttf') format('truetype');
+	  font-weight: 500;
+	  font-style: italic;
+	}
+
+	@font-face {
+	  font-family: 'Roboto';
+	  src: url('_Roboto-Bold.ttf') format('truetype');
+	  font-weight: 700;
+	  font-style: normal;
+	}
+
+	@font-face {
+	  font-family: 'Roboto';
+	  src: url('_Roboto-BoldItalic.ttf') format('truetype');
+	  font-weight: 700;
+	  font-style: italic;
+	}
+
+	@counter-style glagolica {
+	  system: fixed;
+	  suffix: " ";
+	  symbols: Ⰰ Ⰱ Ⰲ Ⰳ Ⰴ Ⰵ Ⰶ Ⰷ Ⰸ Ⰹ Ⰻ Ⰼ Ⰽ Ⰾ Ⰿ Ⱀ Ⱁ Ⱂ Ⱃ Ⱄ Ⱅ Ⱆ Ⱇ Ⱈ Ⱋ Ⱌ Ⱍ Ⱎ Ⱏ Ⱏ Ⱐ Ⱑ Ⱖ Ⱓ Ⱔ Ⱗ Ⱘ Ⱙ Ⱚ Ⱛ;
+	}
+
+	.freq {
+	  position: absolute;
+	  top: 0;
+	  left: 0;
+	  text-align: center;
+	  width: 100%;
+	  user-select: none;
+	}
+
+	.freq:before {
+	  content: "freq: ";
+	}
+
+	img {
+	  width: calc(4em /3);
+	  height: 1em;
+	}
+
+	.universal {
+	  color: #47af47;
+	}
+
+	.common {
+	  color: #57a2d7;
+	}
+
+	.unusual {
+	  color: #b97521;
+	}
+
+	.uncommon {
+	  color: #8d4cb5;
+	}
+
+	.rare {
+	  color: #d94444;
+	}
+
+	a {
+	  color: #de1c30;
+	  text-decoration: underline dotted 1px;
+	}
+
+	a:hover {
+	  color: #001c89;
+	}
+
+	.nightMode a:hover {
+	  color: #ffde00;
+	}
+
+	ol {
+	  display: flex;
+	  flex-direction: column;
+	  flex-wrap: wrap;
+	  padding: 0;
+	  margin: 0;
+	}
+
+	ol li {
+	  list-style: glagolica;
+	}
+
+	.pos {
+	  margin-bottom: 1em;
+	}
+
+	.partOfSpeech {
+	  display: flex;
+	  justify-content: center;
+	}
+
+	.partOfSpeech a {
+	  float: left;
+	  margin-right: 1em;
+	}
+
+	.partOfSpeech .freq_info {
+	  float: right;
+	  margin-left: 1em;
+	}
+
+	.info {
+	  font-weight: 300;
+	  display: block;
+	  text-align: center;
+	}
+
+	.partOfSpeech a:after {
+	  content: "";
+	  display: inline-block;
+	  background: url("_interslavic-dictionary-logo.png") no-repeat top right;
+	  background-size: cover;
+	  width: 12px;
+	  height: 12px;
+	}
+
+	.main_word {
+	  display: block;
+	  text-align: center;
+	  margin-bottom: 1em;
+	  font-size: 2em;
+	  font-weight: 700;
+	}
+
+	.translations {
+	  display: flex;
+	  flex-wrap: wrap;
+	  justify-content: space-evenly;
+	  gap: 2em;
+	  align-items: center;
+	}
+
+	.translations li {
+	  text-align: justify;
+	}
+
+	.translations>span:not(.primary) {
+	  max-width: 480px;
+	  opacity: 0.5;
+	}
+
+	.translations span.primary {
+	  font-weight: 500;
+	  font-size: 1.25em;
+	  width: 100%;
+	  display: block;
+	  text-align: center;
+	}
+
+	.translations span.primary .language ol {
+	  display: inline-block;
+	}
+
+	.isv {
+	  display: flex;
+	  justify-content: center;
+	}
+
+	.isv .lat {
+	  float: left;
+	  margin-right: 1em;
+	}
+
+	.isv .cyr {
+	  float: right;
+	  margin-left: 1em;
+	}
